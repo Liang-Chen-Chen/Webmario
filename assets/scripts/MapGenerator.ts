@@ -1,3 +1,5 @@
+import GameData from "./GameData";
+
 const { ccclass, property } = cc._decorator;
 
 // =============================================
@@ -32,7 +34,7 @@ const LEVELS: string[][] = [
         '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
         '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
         // 這裡示範放置牆壁：5是長牆，4是短牆
-        '500000000000006004050000000000000000405000000000600000050000000000000000000004000000000600054000000',
+        '50000000000000600405000000000000000040500000000060000005000000000000000000000400000000060005400000F0',
         '1111111111111111111111110000111111111111111111111111111111111111111000011111111111111111111111111111', 
         '1111111111111111111111110000111111111111111111111111111111111111111000011111111111111111111111111111',
     ],
@@ -49,14 +51,14 @@ const LEVELS: string[][] = [
         '000000002222000000000000000000000000000000002222000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
-        '000022230000000000000002223000000000000000000000000000000000',
+        '000022230000000000000002227000000000000000000000000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
         '000000000000000000000000000000000000000000000000000000000000',
-        '000000000000000000000000000000000000000000000000000000000000',
+        '0000000004000500000000000000000000000000000000000000000000F0',
         '111111111111111100001111111111111111111100001111111111111111',
         '111111111111111100001111111111111111111100001111111111111111',
     ],
@@ -68,19 +70,23 @@ export default class MapGenerator extends cc.Component {
     @property(cc.Prefab) shortWallPrefab: cc.Prefab = null;
     @property(cc.Prefab) tallWallPrefab: cc.Prefab = null;
     @property(cc.Prefab) questionBlockPrefab: cc.Prefab = null;
+    @property(cc.Prefab) flagPrefab: cc.Prefab = null;
     
     @property() enemyProbability: number = 0.1;
     @property(cc.SpriteFrame) groundSpriteFrame: cc.SpriteFrame = null;
     @property(cc.SpriteFrame) brickSpriteFrame: cc.SpriteFrame = null;
     @property(cc.SpriteFrame) questionSpriteFrame: cc.SpriteFrame = null;
     @property(cc.Node) world: cc.Node = null;
-    @property currentLevel: number = 0;
+    //@property currentLevel: number = 0;
+    private currentLevel: number = 0;
 
     readonly TILE_SIZE = 32;
 
     onLoad() {
         cc.director.getPhysicsManager().enabled = true;
         
+        this.currentLevel = GameData.currentLevel;
+
         this.loadLevel(this.currentLevel);
         cc.director.getPhysicsManager().gravity = cc.v2(0, -800);
     }
@@ -101,7 +107,9 @@ export default class MapGenerator extends cc.Component {
                 const char = map[row][col];
                 const x = col * this.TILE_SIZE;
                 const y = (rows - 1 - row) * this.TILE_SIZE;
-                if (char === '3') {
+                if (char === 'F') {
+                    this.spawnPrefab(this.flagPrefab, x, y);
+                }else if (char === '3') {
                     this.spawnQuestionBlock(x, y, "coin");
                 } else if (char === '4') {
                     this.spawnPrefab(this.shortWallPrefab, x, y);
@@ -143,7 +151,7 @@ export default class MapGenerator extends cc.Component {
         node.parent = this.world;
         node.setPosition(x + this.TILE_SIZE/2, y + this.TILE_SIZE/2);
 
-        node.group = 'wall'; // 設定牆壁群組，讓敵人能識別
+        //node.group = 'wall'; // 設定牆壁群組，讓敵人能識別
     }
 
     spawnEnemy(x, y) {
@@ -180,11 +188,19 @@ export default class MapGenerator extends cc.Component {
 
     // 切換到下一關（供 GameManager 呼叫）
     nextLevel() {
+
         const next = this.currentLevel + 1;
+
         if (next < LEVELS.length) {
+
             this.currentLevel = next;
+
+            GameData.currentLevel = next;
+
             this.loadLevel(this.currentLevel);
+
         } else {
+
             cc.log('所有關卡完成！');
         }
     }
