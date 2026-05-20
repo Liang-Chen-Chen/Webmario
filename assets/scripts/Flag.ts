@@ -21,6 +21,10 @@ export default class Flag extends cc.Component {
             GameData.unlockedLevel = 2; // 這裡會自動觸發 GameData 的 setter 存入 localStorage
         }
 
+        if (FirebaseManager.instance) {
+            FirebaseManager.instance.saveProgress(GameManager.instance.score, GameData.unlockedLevel);
+        }
+
         cc.director.loadScene("LevelSelect");
     }
 }
