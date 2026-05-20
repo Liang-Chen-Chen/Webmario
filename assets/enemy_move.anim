@@ -1,0 +1,25 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "enemy_move",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.025,
+  "sample": 40,
+  "speed": 1,
+  "wrapMode": 0,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "63a0954c-619b-486b-924f-67f8ab3ffd93"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}
