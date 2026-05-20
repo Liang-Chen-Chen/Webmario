@@ -1180,7 +1180,7 @@
     },
     "component": "",
     "_componentId": "bb81cHsKIdDT73YNjnAiFs3",
-    "handler": "onSelectLevel1",
+    "handler": "onSelectLevel2",
     "customEventData": ""
   },
   {

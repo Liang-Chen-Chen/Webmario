@@ -12,15 +12,15 @@ export default class Flag extends cc.Component {
         }
     }
 
+    // Flag.ts
     handleWin() {
-        cc.log("通關！");
+        cc.log("第一關通關！更新解鎖進度...");
 
-        // 如果目前是第一關 (0)，解鎖進度就變成 2
-        if (GameData.currentLevel === 0) {
-            GameData.unlockedLevel = 1;
+        // 如果目前玩的是第一關(0)，且進度還是1
+        if (GameData.currentLevel === 0 && GameData.unlockedLevel < 2) {
+            GameData.unlockedLevel = 2; // 這裡會自動觸發 GameData 的 setter 存入 localStorage
         }
 
-        // 直接跳回關卡選擇畫面，此時 LevelSelectManager 的 start 會偵測到 unlockedLevel 為 2
         cc.director.loadScene("LevelSelect");
     }
 }
