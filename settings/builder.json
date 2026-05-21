@@ -1,7 +1,7 @@
 {
   "title": "WebMario",
   "packageName": "org.cocos2d.demo",
-  "startScene": "f7eca3cb-b1e5-4f5b-877e-d023ddb657bb",
+  "startScene": "34a951a9-38a0-462f-be8c-e03af05b9d38",
   "excludeScenes": [],
   "orientation": {
     "landscapeRight": true,

@@ -1,0 +1,10 @@
+How to play this game?
+
+1.Menu Scene: You can login, signup, log out and start the game here
+2.LevelSelectScene: You can select different leven and check the leaderboard here
+3.Gmae Scene: press a/d/w to control mario, you can jump on enemy's head to kill them, and also interact with question blocks to get coin or eat super mushroom that will make mario bigger. But be careful not to be killed by enemy or by jump off the cliff
+4.Game over scene: when you lose all your life, you will be brought here and you can restart or go back to menu
+
+bonus:
+1. log in/ sign up/ sign out page in menu scene
+2.leaderboard that will record the latest score of the player and rank them
