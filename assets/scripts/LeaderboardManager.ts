@@ -19,36 +19,47 @@ export default class LeaderboardManager extends cc.Component {
     }
 
     loadRanking() {
-        // 先清空舊的資料
         this.content.removeAllChildren();
+
+        if (!FirebaseManager.instance || !(FirebaseManager.instance as any).db) {
+            this.statusLabel.string = "資料庫連接中，請稍後...";
+            // 延遲 1 秒後重試
+            this.scheduleOnce(() => { this.loadRanking(); }, 1.0);
+            return;
+        }
+        
+        if (!FirebaseManager.instance) {
+            this.statusLabel.string = "Firebase 未初始化";
+            cc.error("FirebaseManager.instance 是 null！");
+            return;
+        }
+        
         this.statusLabel.string = "Loading...";
 
         FirebaseManager.instance.getLeaderboard((dataArray) => {
-            this.statusLabel.string = ""; // 抓到資料後隱藏 Loading
+            if (!this.node || !this.node.activeInHierarchy) return;
+            
+            this.statusLabel.string = "";
 
             if (dataArray.length === 0) {
-                this.statusLabel.string = "No data available.";
+                this.statusLabel.string = "No data yet.";
                 return;
             }
 
             dataArray.forEach((data, index) => {
-                // 生成每一行排名
                 let item = cc.instantiate(this.rankItemPrefab);
                 item.parent = this.content;
 
-                // 設定文字 (透過節點名稱尋找)
                 let rank = item.getChildByName("RankLabel").getComponent(cc.Label);
                 let name = item.getChildByName("NameLabel").getComponent(cc.Label);
                 let score = item.getChildByName("ScoreLabel").getComponent(cc.Label);
 
                 rank.string = (index + 1).toString();
-                // 隱藏 Email 後半段，保護個資 (player@gmail.com -> player)
                 name.string = data.email ? data.email.split('@')[0] : "Unknown";
-                score.string = data.score.toString();
+                score.string = data.score !== undefined ? data.score.toString() : "0";
             });
         });
     }
-
     onClose() {
         this.node.active = false;
     }

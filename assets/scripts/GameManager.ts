@@ -13,14 +13,20 @@ export default class GameManager extends cc.Component {
     @property(cc.Label) coinLabel: cc.Label = null;
     @property(cc.AudioClip) coinSound: cc.AudioClip = null;
 
-    private score: number = 0;
+    public score: number = 0;
     private life: number = 3;
     private timeLeft: number = 300; // 5分鐘
     private bgmAudioID: number = -1;
     private coinCount: number = 0;
 
     onLoad() {
+        if (GameManager.instance) {
+            this.node.destroy();
+            return;
+        }
         GameManager.instance = this;
+        cc.game.addPersistRootNode(this.node);
+        //GameManager.instance = this;
         this.updateScore(0);
         this.updateLife(0);
 
@@ -55,9 +61,11 @@ export default class GameManager extends cc.Component {
     }
 
     updateTimerUI() {
-        let min = Math.floor(this.timeLeft / 60);
-        let sec = Math.floor(this.timeLeft % 60);
-        this.timerLabel.string = `Time: ${min}:${sec < 10 ? '0' + sec : sec}`;
+        if(this.timerLabel && this.timerLabel.node && this.timerLabel.node.isValid) {
+            let min = Math.floor(this.timeLeft / 60);
+            let sec = Math.floor(this.timeLeft % 60);
+            this.timerLabel.string = `Time: ${min}:${sec < 10 ? '0' + sec : sec}`;
+        }else {}
     }
 
     getLife() { return this.life; }

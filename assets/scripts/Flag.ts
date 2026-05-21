@@ -1,5 +1,7 @@
 // Flag.ts
 import GameData from "./GameData";
+import FirebaseManager from "./FirebaseManager";
+import GameManager from "./GameManager";
 
 const { ccclass, property } = cc._decorator;
 
@@ -13,18 +15,25 @@ export default class Flag extends cc.Component {
     }
 
     // Flag.ts
+    // Flag.ts
     handleWin() {
-        cc.log("第一關通關！更新解鎖進度...");
+        cc.log("通關流程開始");
 
-        // 如果目前玩的是第一關(0)，且進度還是1
+        // 1. 本地逻辑
         if (GameData.currentLevel === 0 && GameData.unlockedLevel < 2) {
-            GameData.unlockedLevel = 2; // 這裡會自動觸發 GameData 的 setter 存入 localStorage
+            GameData.unlockedLevel = 2;
         }
 
-        if (FirebaseManager.instance) {
-            FirebaseManager.instance.saveProgress(GameManager.instance.score, GameData.unlockedLevel);
-        }
-
+        // 2. 執行跳轉（先跳轉，Firebase 在背景慢慢傳）
         cc.director.loadScene("LevelSelect");
+
+        // 3. 背景執行存檔
+        if (FirebaseManager.instance) {
+            try {
+                FirebaseManager.instance.saveProgress(GameManager.instance.score, GameData.unlockedLevel);
+            } catch (e) {
+                cc.error("Firebase 背景存檔失敗:", e);
+            }
+        }
     }
 }
