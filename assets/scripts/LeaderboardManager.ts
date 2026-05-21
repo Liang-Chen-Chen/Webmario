@@ -50,12 +50,21 @@ export default class LeaderboardManager extends cc.Component {
                 let item = cc.instantiate(this.rankItemPrefab);
                 item.parent = this.content;
 
+                
+
                 let rank = item.getChildByName("RankLabel").getComponent(cc.Label);
                 let name = item.getChildByName("NameLabel").getComponent(cc.Label);
                 let score = item.getChildByName("ScoreLabel").getComponent(cc.Label);
 
                 rank.string = (index + 1).toString();
-                name.string = data.email ? data.email.split('@')[0] : "Unknown";
+                let originalName = data.email ? data.email.split('@')[0] : "Unknown";
+                const MAX_LENGTH = 5; // 設定你想要的字數上限
+
+                if (originalName.length > MAX_LENGTH) {
+                    name.string = originalName.substring(0, MAX_LENGTH) + "...";
+                } else {
+                    name.string = originalName;
+                }
                 score.string = data.score !== undefined ? data.score.toString() : "0";
             });
         });
